@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ᴘᴇʀꜰᴏʀᴍᴀɴᴄᴇ_ʀᴇᴠɪᴇᴡ ᴜᴘʟᴏᴀᴅꜱ</title>
+    <link rel="icon" href="/ꜱᴛᴀᴛɪᴄ/ɪᴍᴀɢᴇꜱ/app-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 95%;
+            background: rgba(13, 17, 23, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 3rem;
+            backdrop-filter: blur(10px);
+            /* box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.3); */
+            box-shadow: 0 0.25rem 0.625rem teal;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: cyan;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.125rem;
+            margin: 0;
+            padding: 0;
+            text-transform: uppercase;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .menu {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s ease-in-out;
+            position: relative;
+            text-transform: uppercase;
+            padding: 0.625rem 0.9375rem;
+        }
+
+        .menu a:hover {
+            color: cyan;
+        }
+
+        .menu a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0.125rem;
+            background: cyan;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Login Box Styling */
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 0.625rem;
+            box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.3);
+            text-align: center;
+            margin-top: 7rem;
+            width: 25rem;
+        }
+
+        .login-box h2 {
+            font-size: 1.75rem;
+            color: cyan;
+            margin-bottom: 1.25rem;
+        }
+
+        .user-box {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: cyan;
+            color: #0d1117;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 0.3125rem;
+            transition: 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background: #00bcd4;
+        }
+
+        button {
+            position: relative;
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            color: white;
+            background: transparent;
+            border: 0.125rem solid cyan;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 0.3125rem;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: cyan;
+            color: #0d1117;
+            font-weight: 700;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 48rem) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 0.625rem 1.25rem;
+            }
+
+            .menu {
+                flex-direction: column;
+                gap: 0.625rem;
+            }
+
+            .menu a {
+                display: block;
+            }
+
+            .login-box {
+                width: 20rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>Sheet Analyzer</h1>
+        </div>
+        <div class="menu">
+            <a class="home" href="/">HOME</a>
+            <a href="/upload">Reportcard to Excel</a>
+        </div>
+    </nav>
+    <div class="login-box">
+        <h2>Upload PDF File</h2>
+        <form id="upload-form" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <div class="user-box">
+                <input id="file-upload" type="file" name="files" accept=".pdf" onchange="updateFileName()" multiple>
+                <label for="file-upload" class="custom-file-upload">Choose File</label>
+            </div>
+            <button type="submit" value="Upload"> Upload </button>
+            <div id="error-message" class="error-message" style="display: none;">Please select a file.</div>
+        </form>
+
+        <script>
+            // Navbar shadow on scroll
+            window.addEventListener("scroll", function () {
+                const navbar = document.querySelector(".navbar");
+                if (window.scrollY > 10) {
+                    navbar.style.boxShadow = "0 0.5rem 1rem rgba(0, 255, 255, 0.4)";
+                } else {
+                    navbar.style.boxShadow = "0 0.25rem 0.625rem teal";
+                }
+            });
+
+            // File input label update
+            function updateFileName() {
+                const input = document.getElementById("file-upload");
+                const label = document.querySelector(".custom-file-upload");
+                if (input.files.length > 0) {
+                    label.textContent = input.files.length + " file(s) selected";
+                } else {
+                    label.textContent = "Choose File";
+                }
+            }
+
+            // Form validation
+            function validateForm() {
+                const input = document.getElementById("file-upload");
+                const errorMessage = document.getElementById("error-message");
+                if (input.files.length === 0) {
+                    errorMessage.style.display = "block";
+                    return false;
+                }
+                errorMessage.style.display = "none";
+                return true;
+            }
+        </script>
+
+
+</body>
+
+</html>
