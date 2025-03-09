@@ -37,7 +37,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 3rem;
+            padding: 0.5rem 3rem;
             backdrop-filter: blur(10px);
             box-shadow: 0 0.25rem 0.625rem teal;
             z-index: 1000;
@@ -55,8 +55,16 @@
             letter-spacing: 0.125rem;
             margin: 0;
             padding: 0;
-            text-transform: uppercase;
+            font-weight: 400;
+            /* text-transform: uppercase; */
             animation: fadeIn 1s ease-in-out;
+        }
+
+        .logo h1::first-letter {
+            color: red;
+            font-family: 'Caveat';
+            font-size: 2.2rem;
+            font-weight: 900;
         }
 
         .menu {
@@ -72,6 +80,7 @@
             position: relative;
             padding: 0.625rem 0.9375rem;
             text-transform: uppercase;
+            letter-spacing: 0.15rem;
         }
 
         .menu a:hover {
@@ -233,7 +242,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <h1>Sheet Analyzer</h1>
+            <h1>EduScan</h1>
         </div>
         <div class="menu">
             <a class="home" href="/">HOME</a>
@@ -242,9 +251,10 @@
     </nav>
     <section class="hero-box">
         <div class="txt-left">
-            <h3>Hello, It's Me</h3>
+            <!-- <h3>MSBTE Marksheet Analyzer</h3> -->
             <h1>Krushna Kale</h1>
-            <h3 class="developer-txt">And I'm a <span style="color: cyan;">Final Year Student CO.</span></h3>
+            <h3 class="developer-txt"><span style="color: cyan;">Final Year, Computer Engineering</span>
+            </h3>
             <p>Shreeyash College Of Engineering And Technology <i style="color: cyan;"><b><u>( Polytechnic )</u></b></i>
                 Chh. Sambhaji Nagar</p>
         </div>

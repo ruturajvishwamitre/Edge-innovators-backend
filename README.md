@@ -1,8 +1,3 @@
-### Repository Name:
-**MSBTE-Marksheet-Analyzer**
-
----
-
 # MSBTE Marksheet Analyzer
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
@@ -42,31 +37,56 @@ Whether you're an educational institution, a teacher, or a student, this tool si
 
 ---
 
+## Screenshots
+
+### Home Page
+
+![Home Page](https://via.placeholder.com/600x400.png?text=Home+Page)
+_The home page provides an overview of the tool and instructions for use._
+
+### Upload Page
+
+![Upload Page](https://via.placeholder.com/600x400.png?text=Upload+Page)
+_Upload your MSBTE marksheet PDFs here._
+
+### Download Page
+
+![Download Page](https://via.placeholder.com/600x400.png?text=Download+Page)
+_Download the parsed data in Excel format._
+
+---
+
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - Pip (Python package manager)
 
 ### Steps
+
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/your-username/MSBTE-Marksheet-Analyzer.git
    cd MSBTE-Marksheet-Analyzer
    ```
 
 2. Create a virtual environment (optional but recommended):
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. Install dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. Run the application:
+
    ```bash
    python app.py
    ```
@@ -81,10 +101,12 @@ Whether you're an educational institution, a teacher, or a student, this tool si
 ## Usage
 
 1. **Upload PDFs**:
+
    - Go to the home page and click "Upload PDFs".
    - Select one or more MSBTE marksheet PDF files and upload them.
 
 2. **Process Data**:
+
    - The application will extract and parse the data from the PDFs.
 
 3. **Download Excel**:
@@ -94,12 +116,12 @@ Whether you're an educational institution, a teacher, or a student, this tool si
 
 ## API Endpoints
 
-| Endpoint          | Method | Description                          |
-|-------------------|--------|--------------------------------------|
-| `/`               | GET    | Home page with upload instructions.  |
-| `/upload`         | POST   | Upload PDF files for processing.     |
-| `/download/<file>`| GET    | Download the generated Excel file.   |
-| `/test`           | GET    | Test route for processing a sample PDF. |
+| Endpoint           | Method | Description                             |
+| ------------------ | ------ | --------------------------------------- |
+| `/`                | GET    | Home page with upload instructions.     |
+| `/upload`          | POST   | Upload PDF files for processing.        |
+| `/download/<file>` | GET    | Download the generated Excel file.      |
+| `/test`            | GET    | Test route for processing a sample PDF. |
 
 ---
 
@@ -143,7 +165,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 For questions or feedback, feel free to reach out:
 
-- **Krushna Kale**: [Your Email](krushnakaale@gmail.com)
-- **GitHub**: [Your GitHub Profile](https://github.com/krushnakaale)
+- **Krushna Kale**: [krushnakaale@gmail.com](mailto:your.email@example.com)
+- **GitHub**: [https://github.com/krushnakaale](https://github.com/your-username)
 
 ---

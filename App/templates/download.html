@@ -37,7 +37,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 3rem;
+            padding: 0.5rem 3rem;
             backdrop-filter: blur(10px);
             /* box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.3); */
             box-shadow: 0 0.25rem 0.625rem teal;
@@ -56,8 +56,16 @@
             letter-spacing: 0.125rem;
             margin: 0;
             padding: 0;
-            text-transform: uppercase;
+            font-weight: 400;
+            /* text-transform: uppercase; */
             animation: fadeIn 1s ease-in-out;
+        }
+
+        .logo h1::first-letter {
+            color: red;
+            font-family: 'Caveat';
+            font-size: 2.2rem;
+            font-weight: 900;
         }
 
         .menu {
@@ -73,6 +81,7 @@
             position: relative;
             text-transform: uppercase;
             padding: 0.625rem 0.9375rem;
+            letter-spacing: 0.15rem;
         }
 
         .menu a:hover {
@@ -162,7 +171,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <h1>Sheet Analyzer</h1>
+            <h1>EduScan</h1>
         </div>
         <div class="menu">
             <a class="home" href="/">HOME</a>
