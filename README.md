@@ -41,17 +41,17 @@ Whether you're an educational institution, a teacher, or a student, this tool si
 
 ### Home Page
 
-![Home Page](https://via.placeholder.com/600x400.png?text=Home+Page)
+![Home Page](/assets/home.png)
 _The home page provides an overview of the tool and instructions for use._
 
 ### Upload Page
 
-![Upload Page](https://via.placeholder.com/600x400.png?text=Upload+Page)
+![Upload Page](/assets/upload.png)
 _Upload your MSBTE marksheet PDFs here._
 
 ### Download Page
 
-![Download Page](https://via.placeholder.com/600x400.png?text=Download+Page)
+![Download Page](/assets/download.png)
 _Download the parsed data in Excel format._
 
 ---
