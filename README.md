@@ -167,5 +167,6 @@ For questions or feedback, feel free to reach out:
 
 - **Krushna Kale**: [krushnakaale@gmail.com](mailto:your.email@example.com)
 - **GitHub**: [https://github.com/krushnakaale](https://github.com/your-username)
+- **Linkedin**: [https://www.linkedin.com/in/krushnakaale](https://linkedin.com/your-username)
 
 ---
