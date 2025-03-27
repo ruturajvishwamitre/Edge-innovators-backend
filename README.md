@@ -1,11 +1,11 @@
-# MSBTE Marksheet Analyzer
+# MSBTE Marksheet Extractor
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.0%2B-green)
 ![Pandas](https://img.shields.io/badge/Pandas-1.3%2B-orange)
 ![PDFMiner](https://img.shields.io/badge/PDFMiner-20201018-lightgrey)
 
-**MSBTE Marksheet Analyzer** is a powerful and user-friendly tool designed to automate the extraction and analysis of student marksheet data from PDF files provided by the **Maharashtra State Board of Technical Education (MSBTE)**. This application is built using Python, Flask, and Pandas, making it easy to upload, process, and export marksheet data into a structured Excel format.
+**MSBTE Marksheet Extractor** is a powerful and user-friendly tool designed to automate the extraction and analysis of student marksheet data from PDF files provided by the **Maharashtra State Board of Technical Education (MSBTE)**. This application is built using Python, Flask, and Pandas, making it easy to upload, process, and export marksheet data into a structured Excel format.
 
 Whether you're an educational institution, a teacher, or a student, this tool simplifies the process of extracting key details such as student names, enrollment numbers, semester results, percentages, and more. It also provides insights into student performance by categorizing results into classes (e.g., FIRST CLASS, SECOND CLASS) and identifying pass/fail statuses.
 
@@ -28,7 +28,7 @@ Whether you're an educational institution, a teacher, or a student, this tool si
 
 ---
 
-## Why Use MSBTE Marksheet Analyzer?
+## Why Use MSBTE Marksheet Extractor?
 
 - **Save Time**: Automate the tedious task of manually extracting data from PDF marksheets.
 - **Accuracy**: Reduce human errors in data extraction and processing.
@@ -68,8 +68,8 @@ _Download the parsed data in Excel format._
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/MSBTE-Marksheet-Analyzer.git
-   cd MSBTE-Marksheet-Analyzer
+   git clone https://github.com/your-username/MSBTE-Marksheet-Extractor.git
+   cd MSBTE-Marksheet-Extractor
    ```
 
 2. Create a virtual environment (optional but recommended):

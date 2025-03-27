@@ -6,7 +6,7 @@ from pdfminer.high_level import extract_text
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "./ᴘᴇʀꜰᴏʀᴍᴀɴᴄᴇ_ʀᴇᴠɪᴇᴡ/ᴜᴘʟᴏᴀᴅꜱ"
+UPLOAD_FOLDER = "./MSBTE-Marksheet-Extractor/Uploads"
 
 def extract_text_from_pdf(file_path):
     return extract_text(file_path)
