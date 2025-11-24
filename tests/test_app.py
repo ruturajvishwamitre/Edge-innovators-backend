@@ -7,7 +7,9 @@ from pdfminer.high_level import extract_text
 app = Flask(__name__)
 
 # Add current folder path
-UPLOAD_FOLDER = "./MSBTE-Marksheet-Extractor/Uploads"
+
+# UPLOAD_FOLDER = "./MSBTE-Marksheet-Extractor/uploads"
+UPLOAD_FOLDER = "uploads"
 
 def extract_text_from_pdf(file_path):
     return extract_text(file_path)
@@ -62,7 +64,6 @@ def extract_subjects(text):
     
     return subjects
 
-
 def parse_marksheet(text):
     """Parses the given marksheet text and extracts structured data."""
     
@@ -78,6 +79,7 @@ def parse_marksheet(text):
         "Total Marks": extract_by_line_offset(text, "PERCENTAGE", 5),
         "Total Credits": extract_by_line_offset(text, "TOTAL CREDIT", 8),
         "Subjects":extract_subjects(text),
+        # "Subjects": extract_and_arrange_marksheet_data(text)
     }
             
     # Map Semester to Year
@@ -127,7 +129,7 @@ def save_to_excel(data, output_file):
     
 @app.route('/test')
 def test():
-    file_path = os.path.join(UPLOAD_FOLDER, "copy_1.pdf")
+    file_path = os.path.join(UPLOAD_FOLDER, "copy_4.pdf")
 
     if not os.path.exists(file_path):
         return jsonify({"error": f"File '{file_path}' not found"}), 404

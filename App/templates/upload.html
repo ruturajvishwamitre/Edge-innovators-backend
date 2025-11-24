@@ -4,19 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSBTE Marksheet Extractor</title>
+    <title>MSBTE Marksheet Analyzer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
 
     <style>
-        /* Global Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             background-color: #0d1117;
             color: #ffffff;
             display: flex;
@@ -24,23 +28,23 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            box-sizing: border-box;
         }
 
-        /* Navbar Styling */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 95%;
+            width: 100%;
             background: rgba(13, 17, 23, 0.9);
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0.5rem 3rem;
             backdrop-filter: blur(10px);
-            /* box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.3); */
             box-shadow: 0 0.25rem 0.625rem teal;
             z-index: 1000;
+            box-sizing: border-box;
         }
 
         .logo {
@@ -50,26 +54,23 @@
 
         .logo h1 {
             color: cyan;
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 400;
             letter-spacing: 0.125rem;
             margin: 0;
-            padding: 0;
-            font-weight: 400;
-            /* text-transform: uppercase; */
             animation: fadeIn 1s ease-in-out;
         }
 
         .logo h1::first-letter {
             color: red;
-            font-family: 'Caveat';
-            font-size: 2.2rem;
+            font-family: "Caveat", cursive;
+            font-size: 1.5rem;
             font-weight: 900;
         }
 
         .menu {
             display: flex;
-            gap: 1.25rem;
+            gap: 1rem;
         }
 
         .menu a {
@@ -78,8 +79,8 @@
             font-size: 1rem;
             transition: 0.3s ease-in-out;
             position: relative;
-            text-transform: uppercase;
             padding: 0.625rem 0.9375rem;
+            text-transform: uppercase;
             letter-spacing: 0.15rem;
         }
 
@@ -88,7 +89,7 @@
         }
 
         .menu a::after {
-            content: '';
+            content: "";
             display: block;
             width: 0;
             height: 0.125rem;
@@ -107,7 +108,7 @@
             border-radius: 0.625rem;
             box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.3);
             text-align: center;
-            margin-top: 7rem;
+            /* margin-top: 7rem; */
             width: 25rem;
         }
 
@@ -171,7 +172,7 @@
         /* Responsive Design */
         @media (max-width: 48rem) {
             .navbar {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
                 text-align: center;
                 padding: 0.625rem 1.25rem;
@@ -187,7 +188,126 @@
             }
 
             .login-box {
-                width: 20rem;
+                /* width: 20rem; */
+                width: 14rem;
+                padding: 1rem 1.25rem;
+                animation: fadeInUp 0.8s ease-out;
+            }
+
+            .login-box h2 {
+                font-size: 1.25rem;
+                margin-bottom: 0.85rem;
+            }
+
+            .custom-file-upload {
+                font-size: 0.65rem;
+                padding: 0.45rem 1.85rem;
+
+            }
+
+            button {
+                font-size: 0.6rem;
+                padding: 0.25rem 1.75rem;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Smooth fade-in and slide-up animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 48rem) {
+            .menu {
+                font-size: 0.75rem;
+                display: none;
+                flex-direction: row;
+                justify-content: flex-end;
+                /* background: rgba(13, 17, 23, 0.9); */
+                width: 100%;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                text-align: center;
+                padding: 0.225rem 0;
+            }
+
+            .menu.active {
+                display: flex;
+            }
+
+            .menu a {
+                font-size: 0.75rem;
+                letter-spacing: normal;
+                padding: 0.25rem 0.15rem;
+                box-sizing: border-box;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* 🔔 Toast Styles */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background-color: #1f2937;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            min-width: 200px;
+            max-width: 300px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+            animation: fadeInToast 0.5s ease, fadeOutToast 0.5s ease 2.5s;
+        }
+
+        .toast.success {
+            border-left: 5px solid cyan;
+        }
+
+        .toast.error {
+            border-left: 5px solid red;
+        }
+
+        @keyframes fadeInToast {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOutToast {
+            to {
+                opacity: 0;
+                transform: translateX(50px);
             }
         }
     </style>
@@ -198,6 +318,7 @@
         <div class="logo">
             <h1>EduScan</h1>
         </div>
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div> <!-- Hamburger Icon -->
         <div class="menu">
             <a class="home" href="/">HOME</a>
             <a href="/upload">Reportcard to Excel</a>
@@ -214,42 +335,138 @@
             <div id="error-message" class="error-message" style="display: none;">Please select a file.</div>
         </form>
 
+        <!-- Progress Bar -->
+        <div id="progress-container" style="display: none; width: 100%; margin-top: 1rem; text-align: center;">
+            <div id="progress-bar" style="
+        height: 8px;
+        width: 0%;
+        background: cyan;
+        border-radius: 5px;
+        transition: width 0.3s ease-in-out;">
+            </div>
+            <span id="progress-percentage"
+                style="color: cyan; font-weight: bold; display: block; margin-top: 5px;">0%</span>
+        </div>
+
+        <!-- 🔔 Toast Container -->
+        <div class="toast-container" id="toast-container"></div>
+
         <script>
-            // Navbar shadow on scroll
-            window.addEventListener("scroll", function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 const navbar = document.querySelector(".navbar");
-                if (window.scrollY > 10) {
-                    navbar.style.boxShadow = "0 0.5rem 1rem rgba(0, 255, 255, 0.4)";
-                } else {
-                    navbar.style.boxShadow = "0 0.25rem 0.625rem teal";
+                const fileInput = document.getElementById("file-upload");
+                const fileLabel = document.querySelector(".custom-file-upload");
+                const errorMessage = document.getElementById("error-message");
+                const uploadForm = document.getElementById("upload-form");
+                const progressContainer = document.getElementById("progress-container");
+                const progressBar = document.getElementById("progress-bar");
+                const progressPercentage = document.getElementById("progress-percentage");
+                const menuToggle = document.querySelector(".menu-toggle");
+                const menu = document.querySelector(".menu");
+
+                // 🔹 Smooth Navbar Shadow Effect on Scroll
+                let lastScrollY = window.scrollY;
+                window.addEventListener("scroll", () => {
+                    requestAnimationFrame(() => {
+                        if (window.scrollY > 10 && lastScrollY <= 10) {
+                            navbar.style.boxShadow = "0 0.5rem 1rem rgba(0, 255, 255, 0.4)";
+                        } else if (window.scrollY <= 10 && lastScrollY > 10) {
+                            navbar.style.boxShadow = "0 0.25rem 0.625rem teal";
+                        }
+                        lastScrollY = window.scrollY;
+                    });
+                });
+
+                // 🔹 File Input Label (Keep it Fixed: "Choose File")
+                document.getElementById("file-upload").addEventListener("change", function () {
+                    const fileCount = this.files.length;
+                    // const fileLabel = document.querySelector(".custom-file-upload");
+
+                    if (fileCount > 0) {
+                        fileLabel.textContent = `${fileCount} file(s) selected`;
+                    } else {
+                        fileLabel.textContent = "Choose File"; // Reset if no file is selected
+                    }
+                });
+
+
+                // 🔹 Form Validation & Error Handling
+                function validateForm() {
+                    if (fileInput.files.length === 0) {
+                        showError("Please select a file.");
+                        return false;
+                    }
+                    for (let file of fileInput.files) {
+                        if (!file.name.toLowerCase().endsWith(".pdf")) {
+                            showError("Only PDF files are allowed.");
+                            return false;
+                        }
+                    }
+                    return true;
                 }
+
+                function showError(message) {
+                    errorMessage.textContent = message;
+                    errorMessage.style.display = "block";
+                    showToast(message, "error"); // 🔔 Show toast
+                    setTimeout(() => {
+                        errorMessage.style.display = "none";
+                    }, 3000);
+                }
+
+
+                // 🔹 Smooth Progress Bar Animation
+                function startProgressBar() {
+                    progressContainer.style.display = "block";
+                    progressBar.style.width = "0%";
+                    progressPercentage.textContent = "0%";
+
+                    let progress = 0;
+                    function updateProgress() {
+                        if (progress >= 100) return;
+                        progress += 5;
+                        progressBar.style.width = `${progress}%`;
+                        progressPercentage.textContent = `${progress}%`;
+                        requestAnimationFrame(updateProgress);
+                    }
+                    requestAnimationFrame(updateProgress);
+                }
+
+                // 🔹 Form Submit Event (Triggers Progress Bar)
+                uploadForm.addEventListener("submit", function (event) {
+                    if (!validateForm()) {
+                        event.preventDefault();
+                        return;
+                    }
+                    startProgressBar();
+                });
+
+                // 🔹 Responsive Hamburger Menu Toggle
+                menuToggle.addEventListener("click", function () {
+                    menu.classList.toggle("active");
+                });
+
+                // 🔹 Close Menu on Link Click (For Mobile Users)
+                menu.querySelectorAll("a").forEach(link => {
+                    link.addEventListener("click", function () {
+                        menu.classList.remove("active");
+                    });
+                });
             });
 
-            // File input label update
-            function updateFileName() {
-                const input = document.getElementById("file-upload");
-                const label = document.querySelector(".custom-file-upload");
-                if (input.files.length > 0) {
-                    label.textContent = input.files.length + " file(s) selected";
-                } else {
-                    label.textContent = "Choose File";
-                }
-            }
+            // 🔔 Toast Notification Function
+            function showToast(message, type = "success") {
+                const toastContainer = document.getElementById("toast-container");
+                const toast = document.createElement("div");
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                toastContainer.appendChild(toast);
 
-            // Form validation
-            function validateForm() {
-                const input = document.getElementById("file-upload");
-                const errorMessage = document.getElementById("error-message");
-                if (input.files.length === 0) {
-                    errorMessage.style.display = "block";
-                    return false;
-                }
-                errorMessage.style.display = "none";
-                return true;
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
             }
         </script>
-
-
 </body>
 
 </html>

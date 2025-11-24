@@ -1,267 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Convert MSBTE PDF marksheets to Excel in seconds. This intelligent tool extracts student data, calculates results, and generates ready-to-analyze Excel sheets — built for teachers, students, and developers."
+    />
+    <meta
+      name="keywords"
+      content="MSBTE, PDF to Excel, Marksheet Converter, MSBTE Result Extractor, Diploma Report Card Tool, Result Automation, Education Tech"
+    />
+    <title>MSBTE Marksheet Analyzer</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSBTE Marksheet Extractor</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Caveat&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-        /* Global Styles */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #0d1117;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background-color: #0d1117;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(13, 17, 23, 0.9);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 3rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0.25rem 0.625rem teal;
+        z-index: 1000;
+        box-sizing: border-box;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+      }
+
+      .logo h1 {
+        color: cyan;
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.125rem;
+        margin: 0;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      .logo h1::first-letter {
+        color: red;
+        font-family: "Caveat", cursive;
+        font-size: 1.5rem;
+        font-weight: 900;
+      }
+
+      .menu {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .menu a {
+        text-decoration: none;
+        color: white;
+        font-size: 1rem;
+        transition: 0.3s ease-in-out;
+        position: relative;
+        padding: 0.625rem 0.9375rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15rem;
+      }
+
+      .menu a:hover {
+        color: cyan;
+      }
+
+      .menu a::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0.125rem;
+        background: cyan;
+        transition: width 0.3s ease-in-out;
+      }
+
+      .menu a:hover::after {
+        width: 100%;
+      }
+
+      .hero-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        flex-direction: row;
+        padding: 1.25rem;
+        gap: 9rem;
+      }
+
+      .txt-left {
+        text-align: left;
+        max-width: 37.5rem;
+      }
+
+      .txt-left h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: cyan;
+        animation: slideIn 1s ease-in-out;
+      }
+
+      .txt-left h3 {
+        font-size: 1.5rem;
+        color: white;
+        margin: 0.3125rem 0;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      .developer-txt span {
+        font-weight: bold;
+      }
+
+      p {
+        font-size: 1.125rem;
+        color: #a0a0a0;
+        line-height: 1.5;
+        animation: fadeInUp 1.5s ease-in-out;
+      }
+
+      .user-image {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        overflow: hidden;
+        /* border: 2px solid cyan; */
+        animation: fadeIn 1.5s ease-in-out;
+        /* background-color: #1c1f26; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .user-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
 
-        /* Navbar Styling */
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-1.25rem);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          transform: translateY(1.875rem);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 48rem) {
         .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 95%;
-            background: rgba(13, 17, 23, 0.9);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 3rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0.25rem 0.625rem teal;
-            z-index: 1000;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo h1 {
-            color: cyan;
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 0.125rem;
-            margin: 0;
-            padding: 0;
-            font-weight: 400;
-            /* text-transform: uppercase; */
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .logo h1::first-letter {
-            color: red;
-            font-family: 'Caveat';
-            font-size: 2.2rem;
-            font-weight: 900;
+          flex-direction: row;
+          padding: 0.625rem 1.25rem;
         }
 
         .menu {
-            display: flex;
-            gap: 1.25rem;
+          flex-direction: column;
+          gap: 0.625rem;
         }
 
         .menu a {
-            text-decoration: none;
-            color: white;
-            font-size: 1rem;
-            transition: 0.3s ease-in-out;
-            position: relative;
-            padding: 0.625rem 0.9375rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15rem;
+          display: block;
         }
 
-        .menu a:hover {
-            color: cyan;
-        }
-
-        .menu a::after {
-            content: '';
-            display: block;
-            width: 0;
-            height: 0.125rem;
-            background: cyan;
-            transition: width 0.3s ease-in-out;
-        }
-
-        .menu a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero Section Styling */
         .hero-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            flex-direction: row;
-            /* Changed to horizontal layout */
-            padding: 1.25rem;
-            /* gap: 3rem; */
-            gap: 9rem;
-            /* Space between text and image */
-        }
-
-        .txt-left {
-            text-align: left;
-            max-width: 37.5rem;
+          flex-direction: column;
+          padding: 3.125rem 1.25rem;
+          gap: 1.5rem;
         }
 
         .txt-left h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: cyan;
-            animation: slideIn 1s ease-in-out;
+          font-size: 1.45rem;
         }
 
-        .txt-left h3 {
-            font-size: 1.5rem;
-            color: white;
-            margin: 0.3125rem 0;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        .developer-txt span {
-            font-weight: bold;
-        }
-
+        .txt-left h3,
         p {
-            font-size: 1.125rem;
-            color: #a0a0a0;
-            line-height: 1.5;
-            animation: fadeInUp 1.5s ease-in-out;
+          font-size: 0.85rem;
         }
 
-        /* User Image Section */
         .user-image {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            overflow: hidden;
-            /* box-shadow: 0 0.5rem 1rem rgba(0, 255, 255, 0.5); */
-            /* Drop shadow */
-            animation: fadeIn 1.5s ease-in-out;
+          width: 200px;
+          height: 200px;
+        }
+      }
+
+      .menu-toggle {
+        display: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: white;
+      }
+
+      @media (max-width: 48rem) {
+        .menu {
+          font-size: 0.75rem;
+          display: none;
+          flex-direction: row;
+          justify-content: flex-end;
+          background-color: transparent;
+          width: 100%;
+          position: absolute;
+          top: 60px;
+          right: 0;
+          text-align: center;
+          padding: 0.225rem 0;
         }
 
-        .user-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .menu.active {
+          display: flex;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+        .menu a {
+          font-size: 0.75rem;
+          letter-spacing: normal;
+          padding: 0.25rem 0.15rem;
+          box-sizing: border-box;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateY(-1.25rem);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .menu-toggle {
+          display: block;
         }
-
-        @keyframes fadeInUp {
-            from {
-                transform: translateY(1.875rem);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 48rem) {
-            .navbar {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                padding: 0.625rem 1.25rem;
-            }
-
-            .menu {
-                flex-direction: column;
-                gap: 0.625rem;
-            }
-
-            .menu a {
-                display: block;
-            }
-
-            .hero-box {
-                flex-direction: column;
-                /* Stack vertically on small screens */
-                padding: 3.125rem 1.25rem;
-                gap: 1.5rem;
-            }
-
-            .txt-left h1 {
-                font-size: 2rem;
-            }
-
-            .txt-left h3,
-            p {
-                font-size: 1.125rem;
-            }
-
-            .user-image {
-                width: 200px;
-                height: 200px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <nav class="navbar">
-        <div class="logo">
-            <h1>EduScan</h1>
-        </div>
-        <div class="menu">
-            <a class="home" href="/">HOME</a>
-            <a href="/upload">Reportcard to Excel</a>
-        </div>
+      <div class="logo">
+        <h1>EduScan</h1>
+      </div>
+      <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+      <div class="menu">
+        <a class="home" href="/">HOME</a>
+        <a href="/upload">Reportcard to Excel</a>
+      </div>
     </nav>
-    <section class="hero-box">
-        <div class="txt-left">
-            <!-- <h3>MSBTE Marksheet Analyzer</h3> -->
-            <h1>Krushna Kale</h1>
-            <h3 class="developer-txt"><span style="color: cyan;">Final Year, Computer Engineering</span>
-            </h3>
-            <p>Shreeyash College Of Engineering And Technology <i style="color: cyan;"><b><u>( Polytechnic )</u></b></i>
-                Chh. Sambhaji Nagar</p>
-        </div>
-        <!-- User Image Section -->
-        <div class="user-image">
-            <!-- <img src="/Static/Images/user.jpg" alt="User Image"> -->
-        </div>
-    </section>
-</body>
 
+    <section class="hero-box">
+      <div class="txt-left">
+        <h1>MSBTE Marksheet Analyzer</h1>
+        <h3 class="developer-txt">
+          <span style="color: cyan"
+            >Final Year, Computer Science & Engineering</span
+          >
+        </h3>
+        <p>
+          Shreeyash Pratisthan College of Engineering & Technology
+          <i style="color: rgb(83, 177, 177)"
+            ><u> <br />( Diploma - CSE )</u></i
+          >
+          &nbsp; Chh. Sambhaji Nagar
+        </p>
+      </div>
+
+      <div class="user-image">
+        <!-- <img src="https://i.pravatar.cc/300?img=12" alt="User Image" /> -->
+      </div>
+    </section>
+
+    <script>
+      function toggleMenu() {
+        document.querySelector(".menu").classList.toggle("active");
+      }
+      // Close menu on outside click
+      document.addEventListener("click", function (e) {
+        const menu = document.querySelector(".menu");
+        const toggle = document.querySelector(".menu-toggle");
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
 </html>
