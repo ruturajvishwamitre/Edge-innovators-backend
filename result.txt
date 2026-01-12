@@ -1,0 +1,44 @@
+{
+    "Data Structure Using C": {
+        "FA-TH": "30/24",
+        "SA-TH": "70/28",
+        "TOTAL": "100/52",
+        "FA-PR": "50/45",
+        "SA-PR": "25/017"
+    },
+    "Database Management System": {
+        "FA-TH": "30/15",
+        "SA-TH": "70/28",
+        "TOTAL": "100/43",
+        "FA-PR": "50/45",
+        "SA-PR": "25/020"
+    },
+    "Digital Techniques": {
+        "FA-TH": "30/26",
+        "SA-TH": "70/14",
+        "TOTAL": "100/40",
+        "FA-PR": "25/23",
+        "SA-PR": "25/017"
+    },
+    "Object Oriented Programming Using C++": {
+        "FA-TH": "30/18",
+        "SA-TH": "70/15",
+        "TOTAL": "100/33",
+        "FA-PR": "50/42",
+        "SA-PR": "25/021"
+    },
+    "Computer Graphics": {
+        "FA-TH": "-",
+        "SA-TH": "-",
+        "TOTAL": "-",
+        "FA-PR": "25/017",
+        "SA-PR": "-"
+    },
+    "Essence of Indian Constitution": {
+        "FA-TH": "-",
+        "SA-TH": "-",
+        "TOTAL": "-",
+        "FA-PR": "-",
+        "SA-PR": "-"
+    }
+}
