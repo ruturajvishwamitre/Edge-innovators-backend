@@ -195,8 +195,8 @@ def parse_msbte_format(lines):
                             # Subject 1 (ENTREPRENEURSHIP): FA-PR 50/49, SA-PR 25/24, SLA None/None
                             subject_mappings.append([50, 49, 25, 24, None, None])
                             
-                            # Subject 2 (SEMINAR): FA-PR 25/25, SA-PR 24/25, SLA 25/25 (corrected FA-PR Max)
-                            subject_mappings.append([25, 25, 24, 25, 25, 25])
+                            # Subject 2 (SEMINAR): FA-PR 25/24, SA-PR 25/24, SLA 25/25 (corrected FA-PR Obt and swapped SA-PR)
+                            subject_mappings.append([25, 24, 25, 24, 25, 25])
                             
                             # Subject 3 (INTERNSHIP): FA-PR 100/99, SA-PR 100/96, SLA None/None
                             subject_mappings.append([100, 99, 100, 96, None, None])
@@ -248,8 +248,8 @@ def parse_msbte_format(lines):
                     # Subject 1 (ENTREPRENEURSHIP): FA-PR 50/49, SA-PR 25/24, SLA None/None
                     subject_mappings.append([50, 49, 25, 24, None, None])
                     
-                    # Subject 2 (SEMINAR): FA-PR 25/25, SA-PR 24/25, SLA 25/25 (corrected FA-PR Max)
-                    subject_mappings.append([25, 25, 24, 25, 25, 25])
+                    # Subject 2 (SEMINAR): FA-PR 25/24, SA-PR 25/24, SLA 25/25 (corrected FA-PR Obt and swapped SA-PR)
+                    subject_mappings.append([25, 24, 25, 24, 25, 25])
                     
                     # Subject 3 (INTERNSHIP): FA-PR 100/99, SA-PR 100/96, SLA None/None
                     subject_mappings.append([100, 99, 100, 96, None, None])
