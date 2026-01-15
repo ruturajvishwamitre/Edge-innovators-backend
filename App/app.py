@@ -83,6 +83,446 @@ def extract_by_line_offset(text, keyword, offset, default="N/A"):
 #     return subjects
 
 
+# Function to extract subject-wise marks from marksheet
+def extract_subject_table(pdf_text):
+    """
+    Extracts subject-wise marks from MSBTE marksheet text.
+    
+    Returns:
+        List[Dict]: List of subject dictionaries with marks details
+    """
+    subjects = []
+    
+    try:
+        # Find the subject table section
+        start_pattern = r"TITLE OF SUBJECTS"
+        end_pattern = r"DATE\s*:\s*[\d/]+"
+        
+        start_match = re.search(start_pattern, pdf_text)
+        end_match = re.search(end_pattern, pdf_text)
+        
+        if not start_match or not end_match:
+            logging.warning("Could not find subject table boundaries")
+            return subjects
+        
+        # Extract the subject table content
+        start_pos = start_match.end()
+        end_pos = end_match.start()
+        subject_table_text = pdf_text[start_pos:end_pos]
+        
+        # Split into lines and clean up
+        lines = [line.strip() for line in subject_table_text.split('\n') if line.strip()]
+        
+        # Parse based on the exact MSBTE format
+        subjects = parse_msbte_format(lines)
+            
+    except Exception as e:
+        logging.error(f"Error extracting subject table: {str(e)}")
+    
+    return subjects
+
+
+def parse_msbte_format(lines):
+    """
+    Parse MSBTE marksheet format based on the actual interleaved structure.
+    Each subject is followed by its own marks in a row.
+    """
+    subjects = []
+    
+    try:
+        # The actual structure is:
+        # Headers -> Subject1 -> Marks1 -> Subject2 -> Marks2 -> etc.
+        
+        if len(lines) < 25:
+            return subjects
+        
+        # Find all subjects and their marks
+        current_subject = None
+        subject_marks = []
+        all_subjects_data = []
+        
+        for i, line in enumerate(lines):
+            # Check if this is a subject name
+            if (line.isupper() and 
+                len(line.split()) > 1 and 
+                not re.match(r'^[\d\-\s]+$', line) and
+                line not in ['MAX', 'OBT', 'TOTAL', 'THEORY', 'PRACTICALS', 'CREDITS', 'SLA', 'FA-TH', 'SA-TH', 'FA-PR', 'SA-PR', 'OBT MAX OBT']):
+                
+                # Save previous subject if exists
+                if current_subject and subject_marks:
+                    all_subjects_data.append({
+                        'name': current_subject,
+                        'marks': subject_marks.copy()
+                    })
+                
+                # Start new subject
+                current_subject = line
+                subject_marks = []
+            
+            # Check if this is a mark
+            elif re.match(r'^[\d\-\s]+$', line) and current_subject:
+                clean_mark = parse_numeric(line.strip())
+                subject_marks.append(clean_mark)
+        
+        # Save the last subject
+        if current_subject and subject_marks:
+            all_subjects_data.append({
+                'name': current_subject,
+                'marks': subject_marks.copy()
+            })
+        
+        print(f"DEBUG: Found {len(all_subjects_data)} subjects with interleaved marks:")
+        for i, subj_data in enumerate(all_subjects_data):
+            print(f"  {i}: {subj_data['name']} - {len(subj_data['marks'])} marks")
+        
+        # Now process each subject's marks
+        for subj_data in all_subjects_data:
+            subject_name = subj_data['name']
+            marks = subj_data['marks']
+            
+            subject_marks = {
+                "subject_name": subject_name.strip(),
+                "fa_th_max": None,
+                "fa_th_obt": None,
+                "sa_th_max": None,
+                "sa_th_obt": None,
+                "th_total_max": None,
+                "th_total_obt": None,
+                "fa_pr_max": None,
+                "fa_pr_obt": None,
+                "sa_pr_max": None,
+                "sa_pr_obt": None,
+                "sla_max": None,
+                "sla_obt": None,
+                "credits": None
+            }
+            
+            # Map marks based on position (MSBTE standard order)
+            # Expected order: FA-TH Max, FA-TH Obt, SA-TH Max, SA-TH Obt, 
+            # TH Total Max, TH Total Obt, FA-PR Max, FA-PR Obt, 
+            # SA-PR Max, SA-PR Obt, SLA Max, SLA Obt, Credits
+            
+            if len(marks) >= 2:
+                subject_marks["fa_th_max"] = marks[0] if len(marks) > 0 else None
+                subject_marks["fa_th_obt"] = marks[1] if len(marks) > 1 else None
+            
+            if len(marks) >= 4:
+                subject_marks["sa_th_max"] = marks[2] if len(marks) > 2 else None
+                subject_marks["sa_th_obt"] = marks[3] if len(marks) > 3 else None
+            
+            if len(marks) >= 6:
+                subject_marks["th_total_max"] = marks[4] if len(marks) > 4 else None
+                subject_marks["th_total_obt"] = marks[5] if len(marks) > 5 else None
+            
+            if len(marks) >= 8:
+                subject_marks["fa_pr_max"] = marks[6] if len(marks) > 6 else None
+                subject_marks["fa_pr_obt"] = marks[7] if len(marks) > 7 else None
+            
+            if len(marks) >= 10:
+                subject_marks["sa_pr_max"] = marks[8] if len(marks) > 8 else None
+                subject_marks["sa_pr_obt"] = marks[9] if len(marks) > 9 else None
+            
+            if len(marks) >= 12:
+                subject_marks["sla_max"] = marks[10] if len(marks) > 10 else None
+                subject_marks["sla_obt"] = marks[11] if len(marks) > 11 else None
+            
+            if len(marks) >= 13:
+                subject_marks["credits"] = marks[12] if len(marks) > 12 else None
+            
+            subjects.append(subject_marks)
+            
+    except Exception as e:
+        logging.error(f"Error parsing MSBTE format: {str(e)}")
+    
+    return subjects
+
+
+def parse_column_format(subject_names, marks_lines):
+    """
+    Parse marks data in column format where marks are arranged vertically.
+    """
+    subjects = []
+    
+    try:
+        # The MSBTE format has marks in columns
+        # Each subject has marks for different components in separate columns
+        
+        # Group marks by subject (based on the actual PDF structure)
+        # From the PDF, we can see the pattern:
+        # FA-TH: 30, 30, 30 (max marks for 3 subjects)
+        # FA-TH OBT: 024, 015, 026 (obtained marks for 3 subjects)
+        # etc.
+        
+        num_subjects = len(subject_names)
+        if num_subjects == 0:
+            return subjects
+        
+        # Parse marks into a 2D array [component][subject]
+        marks_matrix = []
+        current_component = []
+        
+        for mark_line in marks_lines:
+            if mark_line == '-':
+                current_component.append(None)
+            else:
+                clean_mark = parse_numeric(mark_line)
+                current_component.append(clean_mark)
+            
+            # When we have marks for all subjects, start new component
+            if len(current_component) == num_subjects:
+                marks_matrix.append(current_component)
+                current_component = []
+        
+        # Add any remaining marks
+        if current_component:
+            marks_matrix.append(current_component)
+        
+        # Map marks to subjects based on MSBTE format
+        # Expected order: FA-TH Max, FA-TH Obt, SA-TH Max, SA-TH Obt, 
+        # TH Total Max, TH Total Obt, FA-PR Max, FA-PR Obt, SA-PR Max, SA-PR Obt, SLA Max, SLA Obt, Credits
+        
+        for i, subject_name in enumerate(subject_names):
+            subject_marks = {
+                "subject_name": subject_name,
+                "fa_th_max": None,
+                "fa_th_obt": None,
+                "sa_th_max": None,
+                "sa_th_obt": None,
+                "th_total_max": None,
+                "th_total_obt": None,
+                "fa_pr_max": None,
+                "fa_pr_obt": None,
+                "sa_pr_max": None,
+                "sa_pr_obt": None,
+                "sla_max": None,
+                "sla_obt": None,
+                "credits": None
+            }
+            
+            # Map marks from matrix to subject
+            component_idx = 0
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["fa_th_max"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["fa_th_obt"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["sa_th_max"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["sa_th_obt"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["th_total_max"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["th_total_obt"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["fa_pr_max"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["fa_pr_obt"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["sa_pr_max"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["sa_pr_obt"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["sla_max"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["sla_obt"] = marks_matrix[component_idx][i]
+            component_idx += 1
+            
+            if component_idx < len(marks_matrix) and i < len(marks_matrix[component_idx]):
+                subject_marks["credits"] = marks_matrix[component_idx][i]
+            
+            subjects.append(subject_marks)
+            
+    except Exception as e:
+        logging.error(f"Error parsing column format: {str(e)}")
+    
+    return subjects
+
+
+def process_marks_data_improved(subject_marks, marks_data):
+    """
+    Improved processing of marks data based on actual MSBTE format.
+    """
+    try:
+        # Filter out empty strings and clean the data
+        clean_marks = [mark for mark in marks_data if mark and mark.strip() != '']
+        
+        if len(clean_marks) < 2:
+            return
+        
+        # The MSBTE format typically has marks in columns
+        # We need to map them correctly based on the actual structure
+        
+        # For subjects with all components: FA-TH, SA-TH, TH Total, FA-PR, SA-PR, SLA, Credits
+        # Each component has MAX and OBT values
+        
+        idx = 0
+        
+        # FA-TH (Max, Obt)
+        if idx < len(clean_marks):
+            subject_marks["fa_th_max"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        if idx < len(clean_marks):
+            subject_marks["fa_th_obt"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        
+        # SA-TH (Max, Obt)
+        if idx < len(clean_marks):
+            subject_marks["sa_th_max"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        if idx < len(clean_marks):
+            subject_marks["sa_th_obt"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        
+        # TH Total (Max, Obt)
+        if idx < len(clean_marks):
+            subject_marks["th_total_max"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        if idx < len(clean_marks):
+            subject_marks["th_total_obt"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        
+        # FA-PR (Max, Obt)
+        if idx < len(clean_marks):
+            subject_marks["fa_pr_max"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        if idx < len(clean_marks):
+            subject_marks["fa_pr_obt"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        
+        # SA-PR (Max, Obt)
+        if idx < len(clean_marks):
+            subject_marks["sa_pr_max"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        if idx < len(clean_marks):
+            subject_marks["sa_pr_obt"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        
+        # SLA (Max, Obt)
+        if idx < len(clean_marks):
+            subject_marks["sla_max"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        if idx < len(clean_marks):
+            subject_marks["sla_obt"] = parse_numeric(clean_marks[idx])
+            idx += 1
+        
+        # Credits (usually the last value)
+        if idx < len(clean_marks):
+            subject_marks["credits"] = parse_numeric(clean_marks[idx])
+                
+    except Exception as e:
+        logging.error(f"Error processing marks data: {str(e)}")
+
+
+def process_marks_data(subject_marks, marks_data):
+    """
+    Process the collected marks data and populate subject_marks dictionary.
+    """
+    try:
+        # Expected pattern for MSBTE marks:
+        # FA-TH MAX, FA-TH OBT, SA-TH MAX, SA-TH OBT, TH TOTAL MAX, TH TOTAL OBT,
+        # FA-PR MAX, FA-PR OBT, SA-PR MAX, SA-PR OBT, SLA MAX, SLA OBT, Credits
+        
+        if len(marks_data) >= 12:
+            idx = 0
+            
+            # FA-TH marks
+            if idx < len(marks_data):
+                subject_marks["fa_th_max"] = parse_numeric(marks_data[idx])
+                idx += 1
+            if idx < len(marks_data):
+                subject_marks["fa_th_obt"] = parse_numeric(marks_data[idx])
+                idx += 1
+            
+            # SA-TH marks
+            if idx < len(marks_data):
+                subject_marks["sa_th_max"] = parse_numeric(marks_data[idx])
+                idx += 1
+            if idx < len(marks_data):
+                subject_marks["sa_th_obt"] = parse_numeric(marks_data[idx])
+                idx += 1
+            
+            # TH Total marks
+            if idx < len(marks_data):
+                subject_marks["th_total_max"] = parse_numeric(marks_data[idx])
+                idx += 1
+            if idx < len(marks_data):
+                subject_marks["th_total_obt"] = parse_numeric(marks_data[idx])
+                idx += 1
+            
+            # FA-PR marks
+            if idx < len(marks_data):
+                subject_marks["fa_pr_max"] = parse_numeric(marks_data[idx])
+                idx += 1
+            if idx < len(marks_data):
+                subject_marks["fa_pr_obt"] = parse_numeric(marks_data[idx])
+                idx += 1
+            
+            # SA-PR marks
+            if idx < len(marks_data):
+                subject_marks["sa_pr_max"] = parse_numeric(marks_data[idx])
+                idx += 1
+            if idx < len(marks_data):
+                subject_marks["sa_pr_obt"] = parse_numeric(marks_data[idx])
+                idx += 1
+            
+            # SLA marks
+            if idx < len(marks_data):
+                subject_marks["sla_max"] = parse_numeric(marks_data[idx])
+                idx += 1
+            if idx < len(marks_data):
+                subject_marks["sla_obt"] = parse_numeric(marks_data[idx])
+                idx += 1
+            
+            # Credits (usually last)
+            if idx < len(marks_data):
+                subject_marks["credits"] = parse_numeric(marks_data[idx])
+                
+    except Exception as e:
+        logging.error(f"Error processing marks data: {str(e)}")
+
+
+def parse_numeric(value):
+    """
+    Convert string value to integer or return None.
+    Handles '-' and other non-numeric values.
+    """
+    try:
+        if value == '-' or value == '' or value is None:
+            return None
+        
+        # Remove any non-digit characters
+        clean_value = re.sub(r'[^\d]', '', str(value))
+        
+        if clean_value == '':
+            return None
+            
+        return int(clean_value)
+    except:
+        return None
+
+
 # Function to parse marksheet data
 def parse_marksheet(text):
     result_data = {
@@ -151,17 +591,98 @@ def parse_marksheet(text):
     return result_data
 
 
-# Function to save data to Excel with sorting
+# Function to save data to Excel with two sheets
 def save_to_excel(data_list, output_file):
-    df = pd.DataFrame(data_list)
-
-    # Ensure sorting columns exist before applying sort
-    sort_columns = [col for col in ["Percentage", "Gain Marks"] if col in df.columns]
-
-    if sort_columns:
-        df = df.sort_values(by=sort_columns, ascending=False)
-
-    df.to_excel(output_file, index=False)
+    """
+    Save student data to Excel with two sheets:
+    Sheet 1: Student Summary (existing format)
+    Sheet 2: Subject Marks (new format)
+    """
+    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+        # Sheet 1: Student Summary (unchanged format, but without subjects field)
+        summary_data = []
+        for student_data in data_list:
+            # Create a copy without the subjects field for the summary sheet
+            summary_row = student_data.copy()
+            if 'subjects' in summary_row:
+                del summary_row['subjects']
+            summary_data.append(summary_row)
+        
+        df_summary = pd.DataFrame(summary_data)
+        
+        # Ensure sorting columns exist before applying sort
+        sort_columns = [col for col in ["Percentage", "Gain Marks"] if col in df_summary.columns]
+        
+        if sort_columns:
+            df_summary = df_summary.sort_values(by=sort_columns, ascending=False)
+        
+        df_summary.to_excel(writer, sheet_name="Student Summary", index=False)
+        
+        # Sheet 2: Subject Marks
+        subject_rows = []
+        
+        for student_data in data_list:
+            enrollment_no = student_data.get("Enrollment No", "")
+            semester = student_data.get("Semester", "")
+            
+            # Get subject data if available
+            subjects = student_data.get("subjects", [])
+            
+            if subjects:
+                for subject in subjects:
+                    subject_row = {
+                        "Enrollment No": enrollment_no,
+                        "Semester": semester,
+                        "Subject Name": subject.get("subject_name", ""),
+                        "FA-TH Max": subject.get("fa_th_max"),
+                        "FA-TH Obt": subject.get("fa_th_obt"),
+                        "SA-TH Max": subject.get("sa_th_max"),
+                        "SA-TH Obt": subject.get("sa_th_obt"),
+                        "TH Total Max": subject.get("th_total_max"),
+                        "TH Total Obt": subject.get("th_total_obt"),
+                        "FA-PR Max": subject.get("fa_pr_max"),
+                        "FA-PR Obt": subject.get("fa_pr_obt"),
+                        "SA-PR Max": subject.get("sa_pr_max"),
+                        "SA-PR Obt": subject.get("sa_pr_obt"),
+                        "SLA Max": subject.get("sla_max"),
+                        "SLA Obt": subject.get("sla_obt"),
+                        "Credits": subject.get("credits")
+                    }
+                    subject_rows.append(subject_row)
+            else:
+                # If no subjects extracted, still create a placeholder row
+                subject_row = {
+                    "Enrollment No": enrollment_no,
+                    "Semester": semester,
+                    "Subject Name": "No subject data available",
+                    "FA-TH Max": None,
+                    "FA-TH Obt": None,
+                    "SA-TH Max": None,
+                    "SA-TH Obt": None,
+                    "TH Total Max": None,
+                    "TH Total Obt": None,
+                    "FA-PR Max": None,
+                    "FA-PR Obt": None,
+                    "SA-PR Max": None,
+                    "SA-PR Obt": None,
+                    "SLA Max": None,
+                    "SLA Obt": None,
+                    "Credits": None
+                }
+                subject_rows.append(subject_row)
+        
+        if subject_rows:
+            df_subjects = pd.DataFrame(subject_rows)
+            df_subjects.to_excel(writer, sheet_name="Subject Marks", index=False)
+        else:
+            # Create empty sheet with headers if no subject data
+            empty_df = pd.DataFrame(columns=[
+                "Enrollment No", "Semester", "Subject Name",
+                "FA-TH Max", "FA-TH Obt", "SA-TH Max", "SA-TH Obt",
+                "TH Total Max", "TH Total Obt", "FA-PR Max", "FA-PR Obt",
+                "SA-PR Max", "SA-PR Obt", "SLA Max", "SLA Obt", "Credits"
+            ])
+            empty_df.to_excel(writer, sheet_name="Subject Marks", index=False)
 
 
 # Allow only PDF files
@@ -196,6 +717,16 @@ def upload():
                 file.save(filepath)
                 pdf_text = extract_text_from_pdf(filepath)
                 parsed_data = parse_marksheet(pdf_text)
+                
+                # Extract subject-wise marks
+                try:
+                    subjects = extract_subject_table(pdf_text)
+                    parsed_data["subjects"] = subjects
+                    logging.info(f"Extracted {len(subjects)} subjects for enrollment {parsed_data.get('Enrollment No', 'Unknown')}")
+                except Exception as e:
+                    logging.warning(f"Failed to extract subjects for enrollment {parsed_data.get('Enrollment No', 'Unknown')}: {str(e)}")
+                    parsed_data["subjects"] = []
+                
                 extracted_data.append(parsed_data)
 
                 # Delete uploaded PDF after processing
@@ -228,6 +759,16 @@ def test():
 
     pdf_text = extract_text_from_pdf(file_path)
     parsed_data = parse_marksheet(pdf_text)
+    
+    # Extract subject-wise marks
+    try:
+        subjects = extract_subject_table(pdf_text)
+        parsed_data["subjects"] = subjects
+        logging.info(f"Extracted {len(subjects)} subjects for enrollment {parsed_data.get('Enrollment No', 'Unknown')}")
+    except Exception as e:
+        logging.warning(f"Failed to extract subjects for enrollment {parsed_data.get('Enrollment No', 'Unknown')}: {str(e)}")
+        parsed_data["subjects"] = []
+    
     excel_output_file = os.path.join(UPLOAD_FOLDER, "output.xlsx")
     save_to_excel([parsed_data], excel_output_file)
 
